@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=BIG Downloader
+Comment=Aplikasi Pengunduh dan Konverter Batas Wilayah Administratif Indonesia (BIG)
+Exec=big-downloader
+Icon=big-downloader
+Terminal=false
+Type=Application
+Categories=Science;Geoscience;GIS;Utility;
+Keywords=GIS;Geospatial;Indonesia;BIG;Boundary;GeoJSON;Shapefile;GeoPackage;
+StartupNotify=true
