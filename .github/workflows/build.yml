@@ -1,0 +1,127 @@
+name: Build & Release BIG Downloader
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    tags: [ "v*" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  # ==========================================
+  # WINDOWS BUILD (Portable .exe)
+  # ==========================================
+  build-windows:
+    name: Build Windows Portable (.exe)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Run Tests
+        run: cargo test --verbose
+
+      - name: Build Release Binary
+        run: cargo build --release
+
+      - name: Package Windows Portable
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist\BIGDownloader-Windows-Portable | Out-Null
+          Copy-Item target\release\big-downloader.exe -Destination dist\BIGDownloader-Windows-Portable\BIGDownloader.exe
+          Copy-Item README.md -Destination dist\BIGDownloader-Windows-Portable\README.txt
+          Copy-Item LICENSE -Destination dist\BIGDownloader-Windows-Portable\LICENSE.txt
+          Compress-Archive -Path dist\BIGDownloader-Windows-Portable\* -DestinationPath dist\BIGDownloader-Windows-Portable-x86_64.zip -Force
+
+      - name: Upload Windows Portable Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BIGDownloader-Windows-Portable
+          path: dist/BIGDownloader-Windows-Portable-x86_64.zip
+          retention-days: 30
+
+  # ==========================================
+  # LINUX DEBIAN BUILD (.deb package)
+  # ==========================================
+  build-debian:
+    name: Build Debian Package (.deb)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev libasound2-dev
+
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-gnu
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install cargo-deb
+        run: cargo install cargo-deb --locked
+
+      - name: Run Tests
+        run: cargo test --verbose
+
+      - name: Build Release Binary
+        run: cargo build --release
+
+      - name: Build Debian Package
+        run: cargo deb --no-build
+
+      - name: Upload Debian Package Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BIGDownloader-Debian-Package
+          path: target/debian/*.deb
+          retention-days: 30
+
+  # ==========================================
+  # AUTOMATIC GITHUB RELEASE (On Tags v*)
+  # ==========================================
+  release:
+    name: Create GitHub Release
+    needs: [build-windows, build-debian]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Windows Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: BIGDownloader-Windows-Portable
+          path: release-assets/
+
+      - name: Download Debian Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: BIGDownloader-Debian-Package
+          path: release-assets/
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+          generate_release_notes: true
+          draft: false
+          prerelease: false
