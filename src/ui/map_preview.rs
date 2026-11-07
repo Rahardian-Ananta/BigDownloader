@@ -157,7 +157,7 @@ fn render_single_polygon<F>(
     for interior in rings.iter().skip(1) {
         if interior.len() >= 3 {
             let pts: Vec<Pos2> = interior.iter().map(project).collect();
-            let hole_stroke = Stroke::new(1.0, Color32::from_rgb(180, 200, 220));
+            let hole_stroke = Stroke::new(1.0_f32, Color32::from_rgb(180, 200, 220));
             painter.add(egui::Shape::closed_line(pts, hole_stroke));
         }
     }
@@ -169,7 +169,7 @@ fn render_grid(painter: &egui::Painter, rect: Rect, dark_mode: bool) {
     } else {
         Color32::from_rgb(220, 225, 232)
     };
-    let stroke = Stroke::new(0.5, grid_color);
+    let stroke = Stroke::new(0.5_f32, grid_color);
 
     let step = 40.0;
     let mut x = rect.min.x + step;
