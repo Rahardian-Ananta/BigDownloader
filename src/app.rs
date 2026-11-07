@@ -406,8 +406,8 @@ impl App for BigDownloaderApp {
 
                 egui::Frame::none()
                     .fill(bg)
-                    .stroke(egui::Stroke::new(1.0, border))
-                    .corner_radius(egui::CornerRadius::same(6))
+                    .stroke(egui::Stroke::new(1.0_f32, border))
+                    .rounding(egui::Rounding::same(6.0))
                     .inner_margin(egui::Margin::symmetric(12.0, 8.0))
                     .show(ui, |ui| {
                         ui.horizontal(|ui| {
@@ -480,3 +480,4 @@ impl App for BigDownloaderApp {
         }
     }
 }
+

@@ -100,3 +100,4 @@ pub fn render(ui: &mut Ui, state: &mut AppState, db: &Database) {
         }
     }
 }
+

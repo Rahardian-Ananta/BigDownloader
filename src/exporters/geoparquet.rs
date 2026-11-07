@@ -46,9 +46,6 @@ pub fn export_geoparquet<P: AsRef<Path>>(
         }
     });
 
-    let geo_meta_str = serde_json::to_string(&geo_metadata)
-        .map_err(|e| format!("Gagal membuat metadata GeoParquet: {}", e))?;
-
     // Encode all rows: attributes + WKB geometry
     let mut row_records = Vec::new();
     for (idx, feat) in data.features.iter().enumerate() {
@@ -115,3 +112,4 @@ fn hex_encode(bytes: &[u8]) -> String {
     }
     s
 }
+

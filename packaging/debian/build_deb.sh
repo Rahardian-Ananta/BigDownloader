@@ -18,3 +18,4 @@ echo "Membuat paket deb..."
 cargo deb --no-build
 
 echo "=== Selesai! Paket Debian tersimpan di target/debian/ ==="
+

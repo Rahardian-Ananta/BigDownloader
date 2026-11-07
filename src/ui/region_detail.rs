@@ -141,3 +141,4 @@ pub fn render(ui: &mut Ui, state: &mut AppState, trigger_fetch_region: &mut bool
         }
     });
 }
+

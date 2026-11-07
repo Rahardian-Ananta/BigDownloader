@@ -1,6 +1,4 @@
-use crate::core::metadata::{
-    AdminLevel, BIG_BASE_MAPSERVER_URL, LAYER_ID_KABKOTA, LAYER_ID_KECAMATAN,
-};
+use crate::core::metadata::BIG_BASE_MAPSERVER_URL;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
@@ -204,3 +202,4 @@ impl BigApiClient {
         Ok(val)
     }
 }
+

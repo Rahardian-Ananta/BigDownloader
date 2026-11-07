@@ -45,3 +45,4 @@ pub fn get_default_download_dir() -> PathBuf {
     let _ = std::fs::create_dir_all(&fallback);
     fallback
 }
+

@@ -88,3 +88,4 @@ impl<'a> SettingsDb<'a> {
         Ok(())
     }
 }
+

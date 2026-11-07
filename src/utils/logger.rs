@@ -25,3 +25,4 @@ pub fn init_logger(log_dir: PathBuf) -> tracing_appender::non_blocking::WorkerGu
     tracing::info!("Logger initialized successfully.");
     guard
 }
+

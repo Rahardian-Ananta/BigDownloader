@@ -230,3 +230,4 @@ pub fn open_folder_containing(path: &PathBuf) {
         }
     }
 }
+

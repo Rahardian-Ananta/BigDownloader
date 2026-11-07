@@ -181,3 +181,4 @@ Pengujian memverifikasi:
 
 - **Lisensi Kode:** MIT License.
 - **Atribusi Data Geospasial:** Data batas wilayah bersumber dari **Badan Informasi Geospasial (BIG)** Republik Indonesia.
+

@@ -202,3 +202,4 @@ fn encode_wkb_polygon(buf: &mut Vec<u8>, rings: &[Vec<[f64; 2]>]) -> Result<(), 
 
     Ok(())
 }
+

@@ -51,3 +51,4 @@ fn main() -> eframe::Result<()> {
         Box::new(move |cc| Ok(Box::new(BigDownloaderApp::new(cc, db_arc)))),
     )
 }
+

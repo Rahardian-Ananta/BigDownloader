@@ -51,3 +51,4 @@ pub fn render(ui: &mut Ui) {
         ui.label("Data spasial adalah hak milik Badan Informasi Geospasial (BIG) Republik Indonesia.");
     });
 }
+

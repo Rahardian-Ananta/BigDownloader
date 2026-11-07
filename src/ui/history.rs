@@ -126,3 +126,4 @@ fn open_file(path: &PathBuf) {
             .spawn();
     }
 }
+

@@ -184,3 +184,4 @@ fn render_grid(painter: &egui::Painter, rect: Rect, dark_mode: bool) {
         y += step;
     }
 }
+

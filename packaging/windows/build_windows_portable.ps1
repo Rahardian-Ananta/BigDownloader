@@ -20,3 +20,4 @@ if (Test-Path $targetExe) {
 } else {
     Write-Error "Gagal menemukan binary target di $targetExe"
 }
+

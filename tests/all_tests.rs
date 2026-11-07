@@ -289,3 +289,4 @@ fn test_database_crud() {
     let all_after = db.history().get_all().unwrap();
     assert_eq!(all_after.len(), 0);
 }
+

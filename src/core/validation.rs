@@ -1,6 +1,6 @@
 use crate::core::geometry::RawGeometry;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum ValidationError {
     EmptyGeometry,
     RingTooSmall(usize),
@@ -68,3 +68,4 @@ fn validate_ring(ring: &[[f64; 2]]) -> Result<(), ValidationError> {
     }
     Ok(())
 }
+

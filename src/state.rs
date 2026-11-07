@@ -149,3 +149,4 @@ impl AppState {
         self.cancel_flag = Arc::new(AtomicBool::new(false));
     }
 }
+

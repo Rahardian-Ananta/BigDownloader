@@ -121,3 +121,4 @@ pub fn render(ui: &mut Ui, state: &mut AppState, check_connection_trigger: &mut 
         ui.label("• Mendukung 8 format ekspor: GeoJSON, Shapefile (ZIP), GeoPackage, KML, CSV, GeoParquet, TopoJSON, dan GML.");
     });
 }
+

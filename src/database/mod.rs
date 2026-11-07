@@ -59,3 +59,4 @@ impl Database {
         settings::SettingsDb::new(&self.conn)
     }
 }
+

@@ -130,3 +130,4 @@ fn escape_xml(s: &str) -> String {
         .replace('"', "&quot;")
         .replace('\'', "&apos;")
 }
+

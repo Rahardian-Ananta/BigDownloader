@@ -8,3 +8,4 @@ Type=Application
 Categories=Science;Geoscience;GIS;Utility;
 Keywords=GIS;Geospatial;Indonesia;BIG;Boundary;GeoJSON;Shapefile;GeoPackage;
 StartupNotify=true
+
