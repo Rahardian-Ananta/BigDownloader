@@ -1,145 +1,205 @@
-# BIG Downloader Web — Indonesia Administrative Boundary WebGIS
+# 🗺️ BIG Downloader Web
 
-Aplikasi WebGIS modern berbasis **HTML5, CSS3, dan Vanilla JavaScript (ES Modules)** dengan pendekatan estetika **Neo-Brutalism Design**. Aplikasi ini memungkinkan pengguna untuk mencari, mengeksplorasi batas wilayah pada peta interaktif, dan mengunduh data batas administratif Indonesia resmi dari **Badan Informasi Geospasial (BIG)** dalam **8 format data geospasial**.
+<div align="center">
+
+[![GitHub Pages](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-2563EB?style=for-the-badge&logo=github)](https://rahardian-ananta.github.io/BigDownloader/)
+[![Design Style](https://img.shields.io/badge/Style-Neo--Brutalism-FFD93D?style=for-the-badge&labelColor=171717)](https://rahardian-ananta.github.io/BigDownloader/)
+[![Data Source](https://img.shields.io/badge/Source-Badan%20Informasi%20Geospasial%20(BIG)-10B981?style=for-the-badge)](https://geoservices.big.go.id/gis/rest/services/BAPANAS/Batas_Administrasi/MapServer)
+[![License: MIT](https://img.shields.io/badge/License-MIT-FF6B6B?style=for-the-badge)](LICENSE)
+[![Tests](https://img.shields.io/badge/Tests-37%20Passed-74C0FC?style=for-the-badge&labelColor=171717)](tests/test_all.js)
+
+**Aplikasi WebGIS Modern Berbasis Standar Web Native untuk Mencari, Memvisualisasikan, dan Mengunduh Batas Wilayah Administratif Seluruh Indonesia Resmi dari Badan Informasi Geospasial (BIG).**
+
+[🌐 Buka Aplikasi Live (GitHub Pages)](https://rahardian-ananta.github.io/BigDownloader/) • [📖 Dokumentasi](#-fitur-utama) • [💾 Format Ekspor](#-8-format-ekspor-geospasial) • [🧪 Pengujian](#-pengujian-otomatis)
+
+</div>
 
 ---
 
-## 🎨 Karakteristik Neo-Brutalism Design
+## ⚡ Sekilas Tentang Proyek
 
-- **Palet Warna Kontras:** Background off-white (`#F8F4E8`), Primary Yellow (`#FFD93D`), Mint Green (`#A8E6CF`), Coral Red (`#FF6B6B`), Sky Blue (`#74C0FC`).
-- **Garis & Bayangan Tegas:** Border hitam pekat `3px solid #171717`, hard box-shadow tanpa blur `5px 5px 0 #171717`.
-- **Tipografi Ekspresif:** Heading bold *Space Grotesk*, teks konten *Inter*, serta metadata/kode *JetBrains Mono*.
-- **Interaksi Taktil:** Efek hover `translate(-2px, -2px)` dengan shadow membesar, dan efek active press `translate(2px, 2px)`.
-- **Tanpa Framework UI Berat:** 100% CSS murni tanpa Tailwind, Bootstrap, atau UI library lainnya.
+**BIG Downloader Web** adalah solusi geospasial modern yang dirancang khusus bagi mahasiswa, peneliti, praktisi GIS, data scientist, dan developer WebGIS untuk mengunduh batas wilayah Indonesia secara cepat, akurat, dan aman.
+
+Aplikasi ini mengonsumsi langsung layanan geospasial resmi **ArcGIS REST MapServer Badan Informasi Geospasial (BIG)** dan melakukan **100% konversi berkas secara lokal di browser Anda**. Tidak ada data geometri yang dikirim ke server pihak ketiga!
 
 ---
 
-## 🗺️ Sumber Data Resmi: BIG ArcGIS REST API
+## 🎨 Karakteristik Desain: Neo-Brutalism
 
-Endpoint Layanan:
-```text
-https://geoservices.big.go.id/gis/rest/services/BAPANAS/Batas_Administrasi/MapServer
-```
+Aplikasi ini mengusung filosofi **Neo-Brutalism Design** yang khas, tegas, dan ekspresif:
 
-- **Layer 0:** Kabupaten / Kota (dan batas Provinsi melalui agregasi)
-- **Layer 1:** Kecamatan
-- **Layer 2:** Desa / Kelurahan
-- **Sistem Koordinat Acuan (CRS):** EPSG:4326 (WGS 84)
+* 🟡 **Palet Kontras Tinggi:** Warna dasar *warm cream* (`#F8F4E8`), border tebal pekat (`3px solid #171717`), dan bayangan keras (*hard box-shadow* `5px 5px 0 #171717`).
+* 🌓 **Mode Gelap & Terang (Dark / Light Mode):** Dilengkapi tombol pengalih di navbar dengan penyimpanan preferensi lokal permanen (`localStorage`).
+* 🔤 **Tipografi Karakteristik:** Kombinasi *Space Grotesk* (heading tebal), *Inter* (body text yang nyaman dibaca), dan *JetBrains Mono* (kode wilayah & koordinat).
+* 👆 **Interaksi Taktil:** Tombol interaktif dengan efek *press physical feedback* (`translate(2px, 2px)`).
+* 🚫 **Bebas Framework UI Berat:** 100% CSS murni tanpa Tailwind, Bootstrap, atau UI framework monolitik lainnya.
+
+---
+
+## 🚀 Fitur Utama
+
+### 1. 🔍 Pencarian Hierarkis & Akurat
+- Pilihan tingkat administrasi: **Provinsi**, **Kota (Kabupaten/Kota)**, dan **Kecamatan**.
+- Filter hierarki provinsi untuk membedakan wilayah bernama identik di daerah berbeda.
+- **Pencarian Aman:** Tidak melakukan auto-search saat mengetik untuk menghindari batas limit (*rate limit*) API BIG. Pencarian dieksekusi hanya saat tombol **CARI** atau **Enter** ditekan dengan input tidak kosong.
+
+### 2. 🗺️ Peta Interaktif Leaflet & 5 Basemap Gratis
+- Visualisasi batas poligon wilayah dengan batas tegas dan fill transparan.
+- **5 Pilihan Basemap Terbuka (Tanpa API Key):**
+  1. 🏔️ **ESRI World Topo Map** *(Default — detail kontur dan elevasi tajam)*
+  2. 🛣️ **ESRI World Street Map** *(Peta jalan perkotaan)*
+  3. ⛰️ **OpenTopoMap** *(Topografi bukit dan gunung)*
+  4. 🗺️ **OpenStreetMap (OSM)** *(Peta komunitas dunia)*
+  5. ⬛ **Tanpa Basemap** *(Mode visualisasi murni batas geometri)*
+- Floating HUD Controls: Zoom In/Out, Fit Bounds, Koordinat HUD real-time pada kursor.
+- **Layer Stacking Anti-Bocor:** Seluruh kontrol peta meluncur rapi di bawah *sticky navbar* saat halaman di-scroll (`z-index` terisolasi).
+
+### 3. 🔒 Map Interaction Lock & Loading Overlay
+- Saat memilih wilayah dari daftar hasil, peta otomatis dikunci sementara dan memunculkan *overlay loading* semi-transparan bergaya Neo-Brutalism. Peta tidak akan bergeser liar sebelum data siap ditampilkan.
+
+### 4. ⚡ Sistem Caching Geometri Instan (0 Latency)
+- Data geometri poligon yang telah diunduh otomatis disimpan di memori *client-side cache*.
+- Jika Anda berpindah antar wilayah yang sudah pernah dibuka, data langsung dimuat **instan (0 detik)** tanpa perlu memanggil ulang API BIG!
+
+### 5. 📜 Riwayat Pengunduhan Lokal (IndexedDB)
+- Setiap format yang berhasil dibuat dicatat otomatis di basis data lokal browser (*IndexedDB* / *localStorage fallback*).
+- Riwayat dapat ditinjau, dibersihkan, atau dihapus per item tanpa menghapus file di perangkat Anda.
 
 ---
 
 ## 💾 8 Format Ekspor Geospasial
 
-| Format | Ekstensi | Deskripsi & Kompatibilitas |
-|---|---|---|
-| **GeoJSON** | `.geojson` | Standar pertukaran WebGIS RFC 7946 dengan atribut lengkap |
-| **Shapefile** | `.zip` | Paket ESRI Shapefile (`.shp`, `.shx`, `.dbf`, `.prj`, `.cpg`) |
-| **GeoPackage** | `.gpkg` | Basis data spasial SQLite standar OGC untuk QGIS |
-| **KML** | `.kml` | Format Keyhole OGC KML 2.2 untuk Google Earth |
-| **GeoParquet** | `.parquet` | Format analitik geospasial kolumnar Apache Arrow & GeoPandas |
-| **TopoJSON** | `.topojson` | Representasi topologi ringkas berbasis shared arcs |
-| **CSV** | `.csv` | Tabel atribut administratif, luas wilayah, dan koordinat perbatasan |
-| **GML** | `.gml` | Geography Markup Language OGC v3.1 untuk integrasi SDI |
+Seluruh pemrosesan dan konversi dilakukan langsung di browser (*Client-Side Engine*):
+
+| Format | Ekstensi | MIME Type | Kompatibilitas Software | Deskripsi |
+|---|---|---|---|---|
+| **GeoJSON** | `.geojson` | `application/geo+json` | QGIS, ArcGIS, Mapbox, Leaflet, Python | Standar terbuka RFC 7946 dengan atribut lengkap & CRS EPSG:4326. |
+| **Shapefile** | `.zip` | `application/zip` | ArcGIS Desktop, ArcMap, QGIS, AutoCAD | Paket ESRI Shapefile lengkap (`.shp`, `.shx`, `.dbf`, `.prj`, `.cpg UTF-8`). |
+| **GeoPackage** | `.gpkg` | `application/geopackage+sqlite3` | QGIS 3+, ArcGIS Pro, GDAL, GeoPandas | Basis data spasial SQLite standar OGC dengan tabel koordinat WKB. |
+| **KML** | `.kml` | `application/vnd.google-earth.kml+xml` | Google Earth Pro, Google Maps, GPS | Format Keyhole OGC KML 2.2 dengan styling semi-transparan & metadata. |
+| **GeoParquet** | `.parquet` | `application/vnd.apache.parquet` | Apache Arrow, DuckDB, GeoPandas | Format analitik data geospasial kolumnar modern spesifikasi GeoParquet 1.0. |
+| **TopoJSON** | `.topojson` | `application/json` | D3.js, Mapshaper, Vega, Observable | Representasi topologi ringkas berbasis busur bersama (*shared arcs*). |
+| **CSV** | `.csv` | `text/csv` | Microsoft Excel, Google Sheets, Pandas | Tabel atribut administratif, kode wilayah, dan ringkasan batas wilayah. |
+| **GML** | `.gml` | `application/gml+xml` | OGC SDI, Geoserver, QGIS, FME | Geography Markup Language v3.1.1 XML untuk standar pertukaran resmi. |
 
 ---
 
-## 📁 Struktur Direktori
+## 🏛️ Sumber Data: ArcGIS REST API BIG
+
+Layanan geospasial resmi yang digunakan sebagai sumber data primer:
+```text
+https://geoservices.big.go.id/gis/rest/services/BAPANAS/Batas_Administrasi/MapServer
+```
+
+- **Layer 0:** Batas Kabupaten / Kota (dan batas Provinsi melalui agregasi/dissolve)
+- **Layer 1:** Batas Kecamatan
+- **Layer 2:** Batas Desa / Kelurahan
+- **Sistem Koordinat Acuan (CRS):** EPSG:4326 (WGS 84 Geodetik)
+
+---
+
+## 📂 Struktur Repositori
 
 ```text
-big-downloader-web/
-├── index.html                   # Halaman utama aplikasi (HTML5 Semantic)
-├── package.json                 # Metadata & skrip pengujian modul
-├── README.md                    # Dokumentasi lengkap proyek
-│
-├── assets/                      # Aset statis
-│   ├── icons/
-│   └── fonts/
+BigDownloader/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml           # CI/CD Otomatis Deployment ke GitHub Pages
+├── index.html                   # Halaman Utama WebGIS (HTML5 Semantic)
+├── bundle.js                    # Script Bundler untuk Produksi Standalone
+├── package.json                 # Metadata & Skrip Eksekusi Modul
+├── README.md                    # Dokumentasi Resmi Proyek
 │
 ├── css/
-│   ├── theme.css                # Variabel Neo-Brutalism & palet warna
-│   ├── main.css                 # Layout dasar, grid, & tipografi
-│   ├── components.css           # Komponen tombol, kartu, input, peta, modal
-│   └── responsive.css           # Breakpoint tablet & mobile
+│   ├── theme.css                # Variabel Warna, Border, Shadow, & Dark Theme
+│   ├── main.css                 # Reset Layout, Typography, & CSS Grid
+│   ├── components.css           # Tombol, Kartu, Input, HUD Peta, Modal, Toast
+│   └── responsive.css           # Media Queries (Laptop, Tablet, Mobile)
 │
 ├── js/
-│   ├── main.js                  # Bootstrapper aplikasi
-│   ├── app.js                   # Application controller & state orchestrator
+│   ├── main.js                  # Entry Point Bootstrap Aplikasi
+│   ├── app.js                   # State Management & Integrasi Peta
+│   ├── bundle.js                # Versi Bundle Terintegrasi (85 KB)
 │   │
 │   ├── api/
-│   │   ├── big-api.js           # Client ArcGIS REST API & health check
-│   │   └── query-builder.js     # SQL WHERE clause builder aman
+│   │   ├── big-api.js           # Client ArcGIS REST API & Health Check
+│   │   └── query-builder.js     # SQL WHERE Query Builder Aman
 │   │
 │   ├── services/
-│   │   ├── search-service.js    # Pencarian hierarkis (Provinsi, Kab/Kota, Kec)
-│   │   ├── geometry-service.js  # Pengambilan geometri & penggabungan provinsi
-│   │   ├── download-service.js  # Koordinator unduhan & ekspor batch
-│   │   └── validation-service.js# Validasi topologi & koordinat GeoJSON
+│   │   ├── search-service.js    # Logika Pencarian Hierarkis
+│   │   ├── geometry-service.js  # Ekstraksi Poligon & Agregasi Wilayah
+│   │   ├── download-service.js  # Dispatcher Multi-Format & Progress Handler
+│   │   └── validation-service.js# Validasi Topologi Poligon & Ring Closure
 │   │
-│   ├── exporters/
-│   │   ├── geojson.js           # Exporter GeoJSON RFC 7946
-│   │   ├── shapefile.js         # Exporter biner ESRI Shapefile ZIP
-│   │   ├── geopackage.js        # Exporter SQLite3 GeoPackage (GPKG)
-│   │   ├── kml.js               # Exporter OGC KML 2.2
-│   │   ├── geoparquet.js        # Exporter Apache Parquet + GeoParquet 1.0.0
-│   │   ├── topojson.js          # Exporter TopoJSON Topology
-│   │   ├── csv.js               # Exporter CSV RFC 4180
-│   │   └── gml.js               # Exporter GML 3.1.1 XML
-│   │
-│   ├── workers/
-│   │   └── export-worker.js     # Web Worker untuk pemrosesan asinkron
+│   ├── exporters/               # Engine Konversi 8 Format Biner/Teks
+│   │   ├── geojson.js
+│   │   ├── shapefile.js
+│   │   ├── geopackage.js
+│   │   ├── kml.js
+│   │   ├── geoparquet.js
+│   │   ├── topojson.js
+│   │   ├── csv.js
+│   │   └── gml.js
 │   │
 │   ├── storage/
-│   │   └── history.js           # Penyimpanan riwayat lokal (IndexedDB)
+│   │   └── history.js           # Manajemen Riwayat Lokal (IndexedDB)
 │   │
 │   └── utils/
-│       ├── helpers.js           # Debounce, sanitasi XSS, Blob downloader
-│       ├── format.js            # Format ukuran byte, nomor, & tanggal
-│       └── dom.js               # Helper DOM, modal, & Toast Neo-Brutalism
+│       ├── helpers.js           # Sanitasi XSS, Debounce, Blob Trigger
+│       ├── format.js            # Pemformatan Ukuran File, Tanggal, & Badge
+│       └── dom.js               # Utilitas DOM, Modal, & Notifikasi Toast
 │
 └── tests/
-    └── test_all.js              # Unit test suite otomatis (37 skenario pengujian)
+    └── test_all.js              # Unit Test Suite Otomatis (37 Skenario)
 ```
 
 ---
 
-## 🚀 Cara Menjalankan (100% Statis Tanpa Server!)
+## 💻 Cara Menjalankan
 
-Aplikasi ini **100% statis**. Anda **TIDAK memerlukan localhost, web server, Node.js, atau Python** sama sekali.
-
-### Cara Paling Mudah (Langsung Double-Click):
-1. Buka File Explorer di Windows.
-2. Masuk ke folder `big-downloader-web`.
-3. **Cukup klik dua kali (double-click) file `index.html`** untuk langsung membukanya di browser (Chrome, Edge, Firefox).
-
-> **Mengapa bisa tanpa web server?**
-> Layanan ArcGIS REST API Badan Informasi Geospasial (BIG) secara resmi mendukung header `Access-Control-Allow-Origin: null`. Kode JavaScript telah dikemas ke dalam `js/bundle.js` sehingga browser tidak terhalang oleh pembatasan CORS modul lokal `file:///`.
+### Cara 1: Akses Langsung Online (Paling Praktis)
+Kunjungi halaman live di GitHub Pages:
+👉 **[https://rahardian-ananta.github.io/BigDownloader/](https://rahardian-ananta.github.io/BigDownloader/)**
 
 ---
 
-### Cara Alternatif (Jika Tetap Ingin Menggunakan Local Server):
-```bash
-# Menggunakan Node.js
-npx serve big-downloader-web
-
-# Atau menggunakan Python 3
-cd big-downloader-web
-python -m http.server 8000
-```
-Buka browser dan akses: `http://localhost:8000`
+### Cara 2: Jalankan Secara Offline / Lokal (100% Statis)
+Aplikasi ini **tidak memerlukan server backend, Node.js, ataupun Python** untuk digunakan sehari-hari:
+1. Clone atau unduh repositori ini:
+   ```bash
+   git clone https://github.com/Rahardian-Ananta/BigDownloader.git
+   ```
+2. Buka folder hasil clone di File Explorer.
+3. **Cukup klik dua kali (double-click) pada file `index.html`**.
+4. Aplikasi akan langsung berjalan di browser favorit Anda!
 
 ---
 
-## 🧪 Menjalankan Pengujian Otomatis
+## 🧪 Pengujian Otomatis
 
-Aplikasi dilengkapi test suite lengkap untuk memverifikasi logika pencarian, validasi topologi, serta binary builder untuk ke-8 format:
+Repositori ini dilengkapi rangkaian pengujian unit otomatis mencakup seluruh *query builder*, *geometry validator*, dan ke-8 *format exporter*:
 
 ```bash
-cd big-downloader-web
+# Jalankan test suite dengan Node.js
 node tests/test_all.js
 ```
 
-Hasil pengujian:
+**Hasil Pengujian:**
 ```text
+========================================
+🧪 RUNNING BIG DOWNLOADER WEB TEST SUITE
+========================================
+🔹 1. Testing QueryBuilder...           ✅ PASS (3 tests)
+🔹 2. Testing ValidationService...      ✅ PASS (3 tests)
+🔹 3. Testing Format Utilities...       ✅ PASS (4 tests)
+🔹 4. Testing GeoJsonExporter...        ✅ PASS (4 tests)
+🔹 5. Testing CsvExporter...            ✅ PASS (3 tests)
+🔹 6. Testing KmlExporter...            ✅ PASS (3 tests)
+🔹 7. Testing GmlExporter...            ✅ PASS (3 tests)
+🔹 8. Testing TopoJsonExporter...       ✅ PASS (3 tests)
+🔹 9. Testing ShapefileExporter...      ✅ PASS (6 tests)
+🔹 10. Testing GeoPackageExporter...    ✅ PASS (2 tests)
+🔹 11. Testing GeoParquetExporter...    ✅ PASS (2 tests)
 ========================================
 📊 SUMMARY: 37 PASSED, 0 FAILED
 ========================================
@@ -147,9 +207,8 @@ Hasil pengujian:
 
 ---
 
-## 🔒 Privasi & Keamanan
+## 🛡️ Hak Cipta & Atribusi
 
-- **100% Pemrosesan Lokal:** Konversi ke GeoJSON, Shapefile, GeoPackage, KML, Parquet, TopoJSON, CSV, dan GML dilakukan sepenuhnya di dalam browser pengguna (Client-Side).
-- **Tanpa Pengiriman Data Eksternal:** Geometri wilayah tidak pernah dikirim ke server pihak ketiga mana pun.
-- **Sanitasi XSS:** Semua string atribut disanitasi sebelum ditampilkan pada DOM atau popup peta.
-
+* **Data Geospasial:** Hak Cipta &copy; **Badan Informasi Geospasial (BIG)** Republik Indonesia.
+* **Lisensi Kode:** Didistribusikan di bawah lisensi terbuka [MIT License](LICENSE).
+* **Penggunaan:** Ditujukan untuk riset akademik, analisis perencanaan wilayah, WebGIS, dan pemetaan umum. Selalu cantumkan atribusi resmi kepada BIG pada setiap produk turunan peta Anda.
