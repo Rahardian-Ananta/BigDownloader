@@ -14,7 +14,7 @@ import { formatBytes, formatDate, getAdminLevelBadgeClass } from './utils/format
 export class App {
   constructor() {
     this.state = {
-      selectedLevel: 'Kabupaten/Kota',
+      selectedLevel: 'Kota',
       searchQuery: '',
       provinceFilter: '',
       results: [],
@@ -38,8 +38,28 @@ export class App {
     this.checkApiStatus();
     this.renderHistory();
 
-    // Initial search for popular / sample regions
-    this.executeSearch('Bandung');
+    // Default: Kotak pencarian kosong & tampilkan panduan awal (tidak auto-search agar hemat kuota API)
+    this.showInitialEmptyState();
+  }
+
+  showInitialEmptyState() {
+    const container = $('#search-results-list');
+    const countBadge = $('#search-count-badge');
+    if (countBadge) countBadge.textContent = '0 Wilayah';
+
+    if (container) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 2.75rem 1.25rem; color: #4B5563;">
+          <div style="font-size: 2.5rem; margin-bottom: 0.6rem;">🗺️</div>
+          <div style="font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem; color: #171717;">
+            PENCARIAN DATA BATAS WILAYAH
+          </div>
+          <p style="font-size: 0.85rem; margin-top: 0.4rem; line-height: 1.5; max-width: 300px; margin-left: auto; margin-right: auto;">
+            Ketik nama wilayah pada kotak pencarian di atas lalu klik tombol <strong>CARI</strong> untuk mengambil data resmi dari BIG.
+          </p>
+        </div>
+      `;
+    }
   }
 
   /* ========================================================================
@@ -169,56 +189,74 @@ export class App {
      2. EVENT LISTENERS & UI BINDINGS
      ======================================================================== */
   bindEvents() {
-    // Admin Level Selector Tabs
+    // Admin Level Selector Tabs (Provinsi, Kota, Kecamatan)
     $$('.level-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         $$('.level-tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
         this.state.selectedLevel = tab.dataset.level;
-        this.executeSearch(this.state.searchQuery);
+        
+        // Hanya cari ulang jika kotak pencarian sudah diisi pengguna
+        const query = $('#search-input')?.value.trim();
+        if (query) {
+          this.executeSearch(query);
+        }
       });
     });
 
-    // Search Input with Debounce
+    // Search Input (Hanya mencari saat tombol CARI ditekan atau tekan Enter)
     const searchInput = $('#search-input');
     const clearBtn = $('#search-clear-btn');
 
     if (searchInput) {
-      const debouncedSearch = debounce((val) => {
-        this.state.searchQuery = val;
-        this.executeSearch(val);
-      }, 350);
-
+      // Toggle tombol X bersihkan input saat mengetik (tanpa auto-search agar hemat limit API)
       searchInput.addEventListener('input', (e) => {
         const val = e.target.value.trim();
-        clearBtn.classList.toggle('visible', val.length > 0);
-        debouncedSearch(val);
+        clearBtn?.classList.toggle('visible', val.length > 0);
       });
 
+      // Tekan tombol Enter untuk mulai pencarian
       searchInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
-          this.executeSearch(searchInput.value.trim());
+          const val = searchInput.value.trim();
+          if (!val) {
+            showToast('Kotak pencarian tidak boleh kosong. Masukkan nama wilayah.', 'warning');
+            searchInput.focus();
+            return;
+          }
+          this.executeSearch(val);
         }
       });
     }
 
+    // Tombol X Clear
     if (clearBtn) {
       clearBtn.addEventListener('click', () => {
-        searchInput.value = '';
+        if (searchInput) searchInput.value = '';
         clearBtn.classList.remove('visible');
         this.state.searchQuery = '';
-        this.executeSearch('');
+        this.showInitialEmptyState();
       });
     }
 
+    // Tombol CARI ditekan
     $('#btn-search')?.addEventListener('click', () => {
-      this.executeSearch($('#search-input').value.trim());
+      const val = $('#search-input')?.value.trim();
+      if (!val) {
+        showToast('Kotak pencarian tidak boleh kosong. Masukkan nama wilayah.', 'warning');
+        $('#search-input')?.focus();
+        return;
+      }
+      this.executeSearch(val);
     });
 
     // Province Filter Dropdown
     $('#filter-province')?.addEventListener('change', (e) => {
       this.state.provinceFilter = e.target.value;
-      this.executeSearch(this.state.searchQuery);
+      const query = $('#search-input')?.value.trim();
+      if (query) {
+        this.executeSearch(query);
+      }
     });
 
     // Format Option Cards (multi-select)
@@ -391,6 +429,14 @@ export class App {
   }
 
   async executeSearch(query = '') {
+    const trimmed = (query || '').trim();
+    if (!trimmed) {
+      showToast('Kotak pencarian tidak boleh kosong. Masukkan nama wilayah.', 'warning');
+      $('#search-input')?.focus();
+      return;
+    }
+
+    this.state.searchQuery = trimmed;
     const container = $('#search-results-list');
     const countBadge = $('#search-count-badge');
     if (!container) return;

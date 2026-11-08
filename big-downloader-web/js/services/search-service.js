@@ -106,8 +106,8 @@ export class SearchService {
       };
     }
 
-    // 2. Search Kabupaten / Kota (Layer 0)
-    if (level === 'Kabupaten/Kota') {
+    // 2. Search Kota / Kabupaten (Layer 0)
+    if (level === 'Kota' || level === 'Kabupaten/Kota') {
       const where = QueryBuilder.buildSearchWhere(normalizedQuery, { province: provinceFilter });
       const res = await bigApi.queryAttributes({
         layerId: LAYER_KABKOTA,
@@ -123,7 +123,7 @@ export class SearchService {
         return {
           id: `KAB_${attr.OBJECTID}`,
           name: name,
-          adminLevel: 'Kabupaten/Kota',
+          adminLevel: 'Kota',
           regency: attr.WADMKK || name,
           province: attr.WADMPR || '-',
           code: attr.KDPKAB || attr.KDPPUM || '-',
