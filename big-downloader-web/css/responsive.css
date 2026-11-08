@@ -1,0 +1,128 @@
+/* ==========================================================================
+   RESPONSIVE DESIGN BREAKPOINTS — NEO-BRUTALISM
+   ========================================================================== */
+
+/* Laptop & Medium Screens (< 1200px) */
+@media (max-width: 1200px) {
+  .studio-layout {
+    grid-template-columns: 380px 1fr;
+    gap: 1.25rem;
+  }
+
+  .export-formats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tablet Screens (< 992px) */
+@media (max-width: 992px) {
+  .studio-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .studio-sidebar {
+    order: 2;
+  }
+
+  .studio-stage {
+    order: 1;
+  }
+
+  .map-wrapper {
+    height: 400px;
+  }
+
+  .hero-card {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .hero-sticker {
+    position: static;
+    display: inline-block;
+    margin-bottom: 1rem;
+    transform: none;
+  }
+
+  .export-formats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .search-results-container {
+    max-height: 380px;
+  }
+}
+
+/* Mobile Screens (< 640px) */
+@media (max-width: 640px) {
+  :root {
+    --border-width: 2.5px;
+    --shadow: 4px 4px 0 #171717;
+    --shadow-lg: 5px 5px 0 #171717;
+  }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .navbar-nav {
+    gap: 0.35rem;
+  }
+
+  .navbar-nav .nb-btn-text {
+    display: none;
+  }
+
+  .hero-section {
+    padding: 1.25rem 0 1rem;
+  }
+
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .hero-stats-row {
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .level-selector-tabs {
+    flex-wrap: wrap;
+  }
+
+  .level-tab {
+    flex: 1 1 calc(50% - 0.25rem);
+    font-size: 0.75rem;
+  }
+
+  .map-wrapper {
+    height: 320px;
+  }
+
+  .export-formats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .region-detail-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .toast-container {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .nb-toast {
+    min-width: 100%;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+}

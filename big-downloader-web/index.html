@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIG Downloader — Indonesia Administrative Boundary WebGIS</title>
+  
+  <!-- Google Fonts: Space Grotesk, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&family=Space+Grotesk:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+  <!-- Neo-Brutalism Design System Stylesheets -->
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Favicon SVG -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23FFD93D%22 stroke=%22%23171717%22 stroke-width=%228%22/><text y=%2265%22 x=%2250%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2250%22 font-weight=%22900%22 fill=%22%23171717%22>BIG</text></svg>">
+</head>
+<body>
+
+  <!-- ======================================================================
+       NAVBAR
+       ====================================================================== -->
+  <header class="nb-navbar">
+    <div class="container nb-navbar-content">
+      <a href="#" class="navbar-brand">
+        <div class="brand-logo-badge">BIG</div>
+        <div>
+          <span class="brand-text-title">BIG DOWNLOADER</span>
+          <span class="brand-text-sub">INDONESIA BOUNDARY WEBGIS</span>
+        </div>
+      </a>
+
+      <div class="navbar-nav">
+        <!-- API Health Status -->
+        <div class="api-status-pill" id="api-status-pill">
+          <span class="status-dot" id="api-status-dot"></span>
+          <span id="api-status-text">MEMERIKSA BIG API...</span>
+        </div>
+
+        <!-- History Modal Trigger -->
+        <button class="nb-btn nb-btn-sm nb-btn-secondary" id="btn-open-history">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span class="nb-btn-text">RIWAYAT</span>
+        </button>
+
+        <!-- About Modal Trigger -->
+        <button class="nb-btn nb-btn-sm" id="btn-open-about">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span class="nb-btn-text">TENTANG</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       HERO SECTION
+       ====================================================================== -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-card">
+        <div class="hero-sticker">RESMI BADAN INFORMASI GEOSPASIAL</div>
+        <h1 class="hero-title">DOWNLOAD INDONESIA'S GEOSPATIAL DATA.</h1>
+        <p class="hero-subtitle">
+          Cari, eksplorasi batas wilayah, dan unduh data batas administratif Indonesia langsung dari layanan ArcGIS resmi BIG dalam 8 format geospasial modern.
+        </p>
+
+        <div class="hero-stats-row">
+          <div class="hero-stat-box">
+            <span class="stat-value">38</span>
+            <span class="stat-label">PROVINSI</span>
+          </div>
+          <div class="hero-stat-box">
+            <span class="stat-value">514</span>
+            <span class="stat-label">KAB / KOTA</span>
+          </div>
+          <div class="hero-stat-box">
+            <span class="stat-value">7.200+</span>
+            <span class="stat-label">KECAMATAN</span>
+          </div>
+          <div class="hero-stat-box">
+            <span class="stat-value">8</span>
+            <span class="stat-label">FORMAT GIS</span>
+          </div>
+          <button class="nb-btn nb-btn-accent" id="btn-hero-explore" style="margin-left: auto;">
+            <span>MULAI CARI WILAYAH</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       MAIN WORKSPACE (SPLIT STUDIO)
+       ====================================================================== -->
+  <main class="main-content" id="workspace-section">
+    <div class="container">
+      <div class="studio-layout">
+
+        <!-- ==================== LEFT: EXPLORER & SEARCH ==================== -->
+        <aside class="studio-sidebar">
+          
+          <!-- Search Panel -->
+          <div class="nb-card">
+            <div class="nb-card-header">
+              <div class="nb-card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                PENCARIAN WILAYAH
+              </div>
+              <span class="nb-badge" id="search-count-badge">0 Wilayah</span>
+            </div>
+
+            <!-- Admin Level Selector Tabs -->
+            <div class="level-selector-tabs">
+              <div class="level-tab" data-level="Provinsi">PROVINSI</div>
+              <div class="level-tab active" data-level="Kabupaten/Kota">KAB / KOTA</div>
+              <div class="level-tab" data-level="Kecamatan">KECAMATAN</div>
+            </div>
+
+            <!-- Search Input -->
+            <div class="nb-form-group">
+              <div class="search-bar-wrapper">
+                <div class="search-input-box">
+                  <div class="search-icon-inside">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  </div>
+                  <input type="text" class="nb-input" id="search-input" placeholder="Ketik nama wilayah (cth: Bandung, Sleman...)" value="Bandung" autocomplete="off">
+                  <button type="button" class="search-clear-btn" id="search-clear-btn" title="Hapus pencarian">&times;</button>
+                </div>
+                <button type="button" class="nb-btn nb-btn-primary" id="btn-search">CARI</button>
+              </div>
+            </div>
+
+            <!-- Hierarchy Province Filter -->
+            <div class="nb-form-group">
+              <label class="nb-label" for="filter-province">FILTER HIERARKI PROVINSI</label>
+              <select class="nb-select" id="filter-province">
+                <option value="">Semua Provinsi</option>
+              </select>
+            </div>
+
+            <!-- Search Results List -->
+            <div class="search-results-container custom-scroll" id="search-results-list">
+              <!-- Rendered via JavaScript -->
+            </div>
+          </div>
+
+        </aside>
+
+        <!-- ==================== RIGHT: MAP STAGE & EXPORT ==================== -->
+        <section class="studio-stage">
+          
+          <!-- Map Preview Panel -->
+          <div class="map-panel">
+            <div class="map-wrapper">
+              <div id="leaflet-map"></div>
+
+              <!-- Floating Map HUD Controls -->
+              <div class="map-hud">
+                <button class="nb-btn nb-btn-icon" id="map-btn-zoom-in" title="Perbesar Peta">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <button class="nb-btn nb-btn-icon" id="map-btn-zoom-out" title="Perkecil Peta">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <button class="nb-btn nb-btn-icon nb-btn-blue" id="map-btn-fit" title="Pusatkan ke Batas Wilayah">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                </button>
+                <button class="nb-btn nb-btn-icon nb-btn-secondary" id="map-btn-toggle-basemap" title="Nyalakan/Matikan Basemap">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                </button>
+              </div>
+
+              <!-- Coordinate Badge -->
+              <div class="map-coords-badge">
+                <span id="map-coords-text">-2.2000°, 118.0000°</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Region Detail & Inspection Panel -->
+          <div class="nb-card" id="region-detail-card">
+            <div class="nb-card-header">
+              <div>
+                <span class="nb-badge nb-badge-prov" id="detail-admin-level">KABUPATEN/KOTA</span>
+                <span style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 900; margin-left: 0.5rem;" id="detail-region-name">-</span>
+              </div>
+              <button class="nb-btn nb-btn-sm" onclick="openModal('attributes-modal')">
+                LIHAT ATRIBUT LENGKAP
+              </button>
+            </div>
+
+            <div class="region-detail-grid">
+              <div class="meta-info-card">
+                <div class="meta-label">PROVINSI</div>
+                <div class="meta-value" id="detail-province">-</div>
+              </div>
+              <div class="meta-info-card">
+                <div class="meta-label">KABUPATEN / KOTA</div>
+                <div class="meta-value" id="detail-regency">-</div>
+              </div>
+              <div class="meta-info-card">
+                <div class="meta-label">KODE WILAYAH</div>
+                <div class="meta-value" id="detail-code">-</div>
+              </div>
+              <div class="meta-info-card">
+                <div class="meta-label">JUMLAH FITUR</div>
+                <div class="meta-value" id="detail-feature-count">-</div>
+              </div>
+              <div class="meta-info-card">
+                <div class="meta-label">TIPE GEOMETRI</div>
+                <div class="meta-value" id="detail-geom-type">-</div>
+              </div>
+              <div class="meta-info-card">
+                <div class="meta-label">UKURAN DATA</div>
+                <div class="meta-value" id="detail-data-size">-</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Export Manager Panel -->
+          <div class="nb-card" id="export-panel">
+            <div class="nb-card-header">
+              <div class="nb-card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                PILIH FORMAT EKSPOR
+              </div>
+              <button class="nb-btn nb-btn-sm" id="btn-select-all-formats">PILIH SEMUA</button>
+            </div>
+
+            <!-- 8 Format Options Grid -->
+            <div class="export-formats-grid">
+              
+              <!-- 1. GeoJSON -->
+              <div class="format-option-card selected" data-format="geojson">
+                <div class="format-card-top">
+                  <span class="format-name">GeoJSON</span>
+                  <span class="format-ext">.geojson</span>
+                </div>
+                <div class="format-desc">Standar pertukaran WebGIS RFC 7946 dengan atribut lengkap</div>
+                <div style="margin-top: auto; display: flex; align-items: center; justify-content: flex-end;">
+                  <div class="nb-checkbox-box">✓</div>
+                </div>
+              </div>
+
+              <!-- 2. Shapefile -->
+              <div class="format-option-card selected" data-format="shapefile">
+                <div class="format-card-top">
+                  <span class="format-name">Shapefile</span>
+                  <span class="format-ext">.zip</span>
+                </div>
+                <div class="format-desc">Paket ESRI (.shp, .shx, .dbf, .prj) kompatibel dengan ArcMap & QGIS</div>
+                <div style="margin-top: auto; display: flex; align-items: center; justify-content: flex-end;">
+                  <div class="nb-checkbox-box">✓</div>
+                </div>
+              </div>
+
+              <!-- 3. GeoPackage -->
+              <div class="format-option-card" data-format="geopackage">
+                <div class="format-card-top">
+                  <span class="format-name">GeoPackage</span>
+                  <span class="format-ext">.gpkg</span>
+                </div>
+                <div class="format-desc">Basis data spasial SQLite standar OGC untuk QGIS dan modern GIS</div>
+                <div style="margin-top: auto; display: flex; align-items: center; justify-content: flex-end;">
+                  <div class="nb-checkbox-box">✓</div>
+                </div>
+              </div>
+
+              <!-- 4. KML -->
+              <div class="format-option-card" data-format="kml">
+                <div class="format-card-top">
+                  <span class="format-name">KML</span>
+                  <span class="format-ext">.kml</span>
+                </div>
+                <div class="format-desc">Format Keyhole XML untuk Google Earth dan navigasi geospasial</div>
+                <div style="margin-top: auto; display: flex; align-items: center; justify-content: flex-end;">
+                  <div class="nb-checkbox-box">✓</div>
+                </div>
+              </div>
+
+              <!-- 5. GeoParquet -->
+              <div class="format-option-card" data-format="geoparquet">
+                <div class="format-card-top">
+                  <span class="format-name">GeoParquet</span>
+                  <span class="format-ext">.parquet</span>
+                </div>
+                <div class="format-desc">Format analitik geospasial kolumnar Apache Arrow & GeoPandas</div>
+                <div style="margin-top: auto; display: flex; align-items: center; justify-content: flex-end;">
+                  <div class="nb-checkbox-box">✓</div>
+                </div>
+              </div>
+
+              <!-- 6. TopoJSON -->
+              <div class="format-option-card" data-format="topojson">
+                <div class="format-card-top">
+                  <span class="format-name">TopoJSON</span>
+                  <span class="format-ext">.topojson</span>
+                </div>
+                <div class="format-desc">Representasi topologi ringkas berbasis shared arcs untuk visualisasi web</div>
+                <div style="margin-top: auto; display: flex; align-items: center; justify-content: flex-end;">
+                  <div class="nb-checkbox-box">✓</div>
+                </div>
+              </div>
+
+              <!-- 7. CSV -->
+              <div class="format-option-card" data-format="csv">
+                <div class="format-card-top">
+                  <span class="format-name">CSV</span>
+                  <span class="format-ext">.csv</span>
+                </div>
+                <div class="format-desc">Tabel atribut administratif, batas wilayah, dan koordinat untuk Excel</div>
+                <div style="margin-top: auto; display: flex; align-items: center; justify-content: flex-end;">
+                  <div class="nb-checkbox-box">✓</div>
+                </div>
+              </div>
+
+              <!-- 8. GML -->
+              <div class="format-option-card" data-format="gml">
+                <div class="format-card-top">
+                  <span class="format-name">GML</span>
+                  <span class="format-ext">.gml</span>
+                </div>
+                <div class="format-desc">Geography Markup Language OGC v3.1 untuk integrasi SDI internasional</div>
+                <div style="margin-top: auto; display: flex; align-items: center; justify-content: flex-end;">
+                  <div class="nb-checkbox-box">✓</div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Primary Download Trigger Button -->
+            <button class="nb-btn nb-btn-primary w-full" id="btn-start-download" style="padding: 1rem; font-size: 1.1rem;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              UNDUH FORMAT TERPILIH
+            </button>
+          </div>
+
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ======================================================================
+       MODALS
+       ====================================================================== -->
+
+  <!-- 1. Download Progress Modal -->
+  <div class="nb-modal-backdrop" id="download-progress-modal">
+    <div class="nb-modal-window">
+      <div class="nb-card-header" style="margin-bottom: 0; padding: 1.25rem 1.5rem; background: var(--primary);">
+        <div class="nb-card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          MEMPROSES PENGUNDUHAN
+        </div>
+      </div>
+      <div class="nb-modal-body">
+        <div style="display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 0.5rem;">
+          <span id="progress-modal-region-name">Wilayah</span>
+          <span id="progress-modal-formats-count">0 Format</span>
+        </div>
+
+        <div class="nb-progress-wrapper">
+          <div class="nb-progress-bar" id="download-progress-bar"></div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+          <span style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700;" id="download-status-text">Menyiapkan konversi data...</span>
+          <span style="font-family: var(--font-mono); font-weight: 800;" id="download-progress-percent">0%</span>
+        </div>
+      </div>
+      <div class="nb-modal-footer">
+        <button class="nb-btn nb-btn-accent" id="btn-cancel-download">BATALKAN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Download History Modal -->
+  <div class="nb-modal-backdrop" id="history-modal">
+    <div class="nb-modal-window" style="max-width: 800px;">
+      <div class="nb-card-header" style="margin-bottom: 0; padding: 1.25rem 1.5rem; background: var(--secondary);">
+        <div class="nb-card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          RIWAYAT PENGUNDUHAN LOKAL
+        </div>
+        <button class="nb-btn nb-btn-sm" data-close-modal="history-modal">&times;</button>
+      </div>
+      <div class="nb-modal-body">
+        <div class="nb-table-wrapper">
+          <table class="nb-table">
+            <thead>
+              <tr>
+                <th>Wilayah</th>
+                <th>Level</th>
+                <th>Format</th>
+                <th>Ukuran</th>
+                <th>Waktu</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body">
+              <!-- Rendered via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="nb-modal-footer">
+        <button class="nb-btn nb-btn-accent nb-btn-sm" id="btn-clear-history">BERSIHKAN SEMUA</button>
+        <button class="nb-btn nb-btn-sm" data-close-modal="history-modal">TUTUP</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Attribute Inspection Modal -->
+  <div class="nb-modal-backdrop" id="attributes-modal">
+    <div class="nb-modal-window" style="max-width: 650px;">
+      <div class="nb-card-header" style="margin-bottom: 0; padding: 1.25rem 1.5rem; background: var(--blue);">
+        <div class="nb-card-title">
+          ATRIBUT RESMI WILAYAH (BIG)
+        </div>
+        <button class="nb-btn nb-btn-sm" data-close-modal="attributes-modal">&times;</button>
+      </div>
+      <div class="nb-modal-body">
+        <div class="nb-table-wrapper">
+          <table class="nb-table">
+            <thead>
+              <tr>
+                <th>Nama Field</th>
+                <th>Nilai Atribut</th>
+              </tr>
+            </thead>
+            <tbody id="attributes-table-body">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="nb-modal-footer">
+        <button class="nb-btn nb-btn-sm" data-close-modal="attributes-modal">TUTUP</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. About & Attribution Modal -->
+  <div class="nb-modal-backdrop" id="about-modal">
+    <div class="nb-modal-window">
+      <div class="nb-card-header" style="margin-bottom: 0; padding: 1.25rem 1.5rem; background: var(--primary);">
+        <div class="nb-card-title">TENTANG BIG DOWNLOADER</div>
+        <button class="nb-btn nb-btn-sm" data-close-modal="about-modal">&times;</button>
+      </div>
+      <div class="nb-modal-body" style="font-size: 0.95rem;">
+        <h4 style="margin-bottom: 0.5rem;">Sumber Data Resmi</h4>
+        <p>
+          Data batas wilayah diperoleh secara langsung dari layanan <strong>ArcGIS REST API Badan Informasi Geospasial (BIG)</strong> Republik Indonesia:
+          <br>
+          <code style="word-break: break-all; font-size: 0.8rem; background: var(--surface-muted); padding: 0.2rem 0.4rem; border: 1px solid #171717; display: block; margin: 0.5rem 0;">
+            https://geoservices.big.go.id/gis/rest/services/BAPANAS/Batas_Administrasi/MapServer
+          </code>
+        </p>
+        <h4 style="margin-top: 1rem; margin-bottom: 0.5rem;">Privasi & Pemrosesan</h4>
+        <p>
+          Seluruh konversi format file (GeoJSON, Shapefile ZIP, GeoPackage, KML, Parquet, TopoJSON, CSV, GML) dilakukan <strong>100% secara lokal di browser Anda</strong>. Geometri dan file hasil unduhan tidak pernah dikirim ke server pihak ketiga manapun.
+        </p>
+        <h4 style="margin-top: 1rem; margin-bottom: 0.5rem;">Ketentuan Penggunaan</h4>
+        <p style="color: #4B5563; font-size: 0.85rem;">
+          Aplikasi ini ditujukan untuk kebutuhan riset, pemetaan, edukasi, dan analisis data spasial. Selalu cantumkan atribusi resmi kepada Badan Informasi Geospasial (BIG) saat mempublikasikan hasil turunan peta.
+        </p>
+      </div>
+      <div class="nb-modal-footer">
+        <button class="nb-btn nb-btn-primary nb-btn-sm" data-close-modal="about-modal">MENGERTI</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ======================================================================
+       FOOTER
+       ====================================================================== -->
+  <footer class="nb-footer">
+    <div class="container footer-content">
+      <div>
+        <div style="font-family: var(--font-heading); font-weight: 900; font-size: 1.1rem;">BIG DOWNLOADER WEB</div>
+        <div style="font-size: 0.8rem; color: #4B5563;">
+          Dibangun dengan Vanilla JavaScript, Leaflet.js, Turf.js, dan JSZip.
+        </div>
+      </div>
+      <div style="font-family: var(--font-mono); font-size: 0.75rem; color: #6B7280;">
+        Data Source &copy; Badan Informasi Geospasial (BIG) • CRS EPSG:4326
+      </div>
+    </div>
+  </footer>
+
+  <!-- External GIS Libraries (via reliable CDN) -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+
+  <!-- ES Modules Application Main -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

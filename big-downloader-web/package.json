@@ -1,0 +1,20 @@
+{
+  "name": "big-downloader-web",
+  "version": "1.0.0",
+  "description": "BIG Downloader Web — Indonesia Administrative Boundary Data (Neo-Brutalism WebGIS)",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/test_all.js"
+  },
+  "keywords": [
+    "gis",
+    "indonesia",
+    "big",
+    "geojson",
+    "shapefile",
+    "geopackage",
+    "neobrutalism"
+  ],
+  "author": "BIG Downloader Team",
+  "license": "MIT"
+}
