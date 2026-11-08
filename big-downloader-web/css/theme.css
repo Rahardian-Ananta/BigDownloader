@@ -69,3 +69,47 @@
   --shadow: 6px 6px 0 #000000;
 }
 
+/* ==========================================================================
+   NEO-BRUTALISM DARK THEME
+   ========================================================================== */
+[data-theme="dark"] {
+  /* Color Palette */
+  --background: #0E1116;
+  --foreground: #F3F4F6;
+  --surface: #181C23;
+  --surface-muted: #232832;
+
+  /* Accent & Category Colors (Adapted for Dark Mode) */
+  --primary: #FFD93D;
+  --primary-hover: #FFCD1A;
+  --secondary: #2DD4BF;
+  --secondary-hover: #14B8A6;
+  --accent: #FF5A5A;
+  --accent-hover: #EF4444;
+  --blue: #60A5FA;
+  --blue-hover: #3B82F6;
+  --purple: #C084FC;
+  --purple-hover: #A855F7;
+  --orange: #FB923C;
+  --dark: #000000;
+  --gray: #9CA3AF;
+  --gray-light: #2A303D;
+
+  /* Administrative Level Theme Badges */
+  --badge-prov: #FFD93D;
+  --badge-kab: #60A5FA;
+  --badge-kec: #2DD4BF;
+  --badge-desa: #C084FC;
+
+  /* Borders & Shadows */
+  --border-color: #384050;
+  --border: var(--border-width) solid var(--border-color);
+  --border-sm: var(--border-width-sm) solid var(--border-color);
+
+  --shadow: 5px 5px 0 #050608;
+  --shadow-sm: 3px 3px 0 #050608;
+  --shadow-lg: 8px 8px 0 #050608;
+  --shadow-hover: 7px 7px 0 #050608;
+  --shadow-active: 1px 1px 0 #050608;
+}
+

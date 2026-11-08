@@ -32,6 +32,7 @@ export class App {
   }
 
   async init() {
+    this.initTheme();
     this.initMap();
     this.bindEvents();
     this.loadProvincesFilter();
@@ -40,6 +41,30 @@ export class App {
 
     // Default: Kotak pencarian kosong & tampilkan panduan awal (tidak auto-search agar hemat kuota API)
     this.showInitialEmptyState();
+  }
+
+  initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+    this.setTheme(isDark);
+  }
+
+  setTheme(isDark) {
+    const icon = $('#theme-toggle-icon');
+    const text = $('#theme-toggle-text');
+
+    if (isDark) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+      if (icon) icon.textContent = '☀️';
+      if (text) text.textContent = 'TERANG';
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('theme', 'light');
+      if (icon) icon.textContent = '🌙';
+      if (text) text.textContent = 'GELAP';
+    }
   }
 
   showInitialEmptyState() {
@@ -371,6 +396,13 @@ export class App {
         this.renderHistory();
         showToast('Riwayat unduhan dibersihkan.', 'success');
       }
+    });
+
+    // Theme Toggle (Dark / Light Mode)
+    $('#btn-theme-toggle')?.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      this.setTheme(!isDark);
+      showToast(!isDark ? 'Mode Gelap diaktifkan' : 'Mode Terang diaktifkan', 'info', 2000);
     });
 
     // About Modal Trigger

@@ -862,3 +862,122 @@
   gap: 1.25rem;
 }
 
+/* ==========================================================================
+   DARK MODE OVERRIDES & COMPONENT STYLING
+   ========================================================================== */
+[data-theme="dark"] body::before {
+  background-image: radial-gradient(circle, #252a34 1.5px, transparent 1.5px);
+  opacity: 0.7;
+}
+
+[data-theme="dark"] .nb-navbar {
+  background: var(--surface);
+}
+
+[data-theme="dark"] .hero-card {
+  background: #181C23;
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-lg);
+}
+
+[data-theme="dark"] .hero-title {
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .hero-subtitle {
+  color: #D1D5DB;
+}
+
+[data-theme="dark"] .hero-stat-box {
+  background: var(--surface-muted);
+}
+
+[data-theme="dark"] .nb-input:focus,
+[data-theme="dark"] .nb-select:focus {
+  background: #232832;
+}
+
+[data-theme="dark"] .level-tab {
+  background: var(--surface-muted);
+  color: var(--foreground);
+}
+
+[data-theme="dark"] .level-tab.active {
+  background: var(--primary);
+  color: #171717;
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .result-card {
+  background: var(--surface);
+}
+
+[data-theme="dark"] .result-card:hover {
+  background: var(--surface-muted);
+}
+
+[data-theme="dark"] .result-card.selected {
+  background: #212836;
+  border-color: var(--primary);
+  outline-color: var(--primary);
+}
+
+[data-theme="dark"] .result-hierarchy {
+  color: #9CA3AF;
+}
+
+[data-theme="dark"] .format-option-card {
+  background: var(--surface);
+}
+
+[data-theme="dark"] .format-option-card:hover {
+  background: var(--surface-muted);
+}
+
+[data-theme="dark"] .format-option-card.selected {
+  background: #1E293B;
+  border-color: var(--primary);
+}
+
+[data-theme="dark"] .format-option-card.selected .nb-checkbox-box {
+  background: var(--primary);
+  color: #171717;
+}
+
+[data-theme="dark"] .format-desc {
+  color: #9CA3AF;
+}
+
+[data-theme="dark"] .format-ext {
+  background: #232832;
+  color: #FFD93D;
+  border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .nb-table {
+  background: var(--surface);
+  color: var(--foreground);
+}
+
+[data-theme="dark"] .nb-table th {
+  background: #232832;
+  color: #FFD93D;
+  border-bottom: var(--border-sm);
+}
+
+[data-theme="dark"] .nb-table td {
+  border-bottom: 1px solid #2A303D;
+}
+
+[data-theme="dark"] .nb-modal-footer {
+  background: var(--surface-muted);
+}
+
+[data-theme="dark"] .nb-footer {
+  background: var(--surface);
+}
+
+[data-theme="dark"] .search-clear-btn {
+  color: var(--foreground);
+}
+
