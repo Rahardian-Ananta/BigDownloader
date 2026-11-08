@@ -47,8 +47,11 @@ export class App {
      ======================================================================== */
   initMap() {
     const mapElement = $('#leaflet-map');
-    if (!mapElement || !window.L) {
-      console.error('Leaflet.js tidak ditemukan atau elemen map hilang.');
+    if (!mapElement) return;
+
+    if (!window.L) {
+      console.warn('Leaflet.js sedang dimuat atau gagal terhubung.');
+      setTimeout(() => this.initMap(), 500);
       return;
     }
 
@@ -59,11 +62,29 @@ export class App {
       zoomControl: false // custom Neo-Brutalist buttons
     });
 
-    // Neo-brutalist clean basemap (CartoDB Positron / OSM)
-    this.state.tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
-    }).addTo(this.state.map);
+    // 100% Free Public Basemaps (No API Key Required!)
+    this.basemaps = {
+      'esri-topo': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 18,
+        attribution: 'Tiles &copy; Esri &mdash; Esri, USGS, NOAA'
+      }),
+      'esri-street': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 18,
+        attribution: 'Tiles &copy; Esri &mdash; Street Map'
+      }),
+      'opentopo': L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+        maxZoom: 17,
+        attribution: 'Map data: &copy; OpenStreetMap, SRTM | Map style: &copy; OpenTopoMap'
+      }),
+      'osm': L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+      })
+    };
+
+    // Default to ESRI Topo Map (Reliable, fast, no API key needed)
+    this.currentBasemapKey = 'esri-topo';
+    this.state.tileLayer = this.basemaps['esri-topo'].addTo(this.state.map);
 
     // Mouse move coordinate HUD
     this.state.map.on('mousemove', (e) => {
@@ -72,6 +93,14 @@ export class App {
         hud.textContent = `${e.latlng.lat.toFixed(4)}°, ${e.latlng.lng.toFixed(4)}°`;
       }
     });
+
+    // Force Leaflet recalculation of tile container dimensions
+    setTimeout(() => {
+      if (this.state.map) this.state.map.invalidateSize();
+    }, 200);
+    setTimeout(() => {
+      if (this.state.map) this.state.map.invalidateSize();
+    }, 700);
   }
 
   renderGeoJsonOnMap(geojson, regionName) {
@@ -243,15 +272,51 @@ export class App {
       }
     });
 
-    // Toggle Basemap
+    // Basemap Provider Selector (ESRI Topo, OpenTopo, OSM)
+    $('#map-basemap-select')?.addEventListener('change', (e) => {
+      const key = e.target.value;
+      if (!this.state.map || !this.basemaps) return;
+
+      // Remove existing tile layer if any
+      if (this.state.tileLayer) {
+        this.state.map.removeLayer(this.state.tileLayer);
+        this.state.tileLayer = null;
+      }
+
+      if (key !== 'none' && this.basemaps[key]) {
+        this.currentBasemapKey = key;
+        this.state.tileLayer = this.basemaps[key].addTo(this.state.map);
+        this.state.basemapVisible = true;
+        // Ensure polygon layer stays on top
+        if (this.state.geojsonLayer) {
+          this.state.geojsonLayer.bringToFront();
+        }
+        showToast(`Basemap diubah: ${e.target.options[e.target.selectedIndex].text}`, 'info', 2000);
+      } else {
+        this.state.basemapVisible = false;
+        showToast('Basemap dinonaktifkan (Mode Batas Murni)', 'info', 2000);
+      }
+    });
+
+    // Toggle Basemap (Quick toggle button)
     $('#map-btn-toggle-basemap')?.addEventListener('click', () => {
-      if (!this.state.map || !this.state.tileLayer) return;
+      if (!this.state.map || !this.basemaps) return;
       this.state.basemapVisible = !this.state.basemapVisible;
+      const selectEl = $('#map-basemap-select');
+
       if (this.state.basemapVisible) {
-        this.state.map.addLayer(this.state.tileLayer);
+        const key = this.currentBasemapKey || 'esri-topo';
+        if (this.state.tileLayer) this.state.map.removeLayer(this.state.tileLayer);
+        this.state.tileLayer = this.basemaps[key].addTo(this.state.map);
+        if (this.state.geojsonLayer) this.state.geojsonLayer.bringToFront();
+        if (selectEl) selectEl.value = key;
         showToast('Basemap diaktifkan', 'info', 2000);
       } else {
-        this.state.map.removeLayer(this.state.tileLayer);
+        if (this.state.tileLayer) {
+          this.state.map.removeLayer(this.state.tileLayer);
+          this.state.tileLayer = null;
+        }
+        if (selectEl) selectEl.value = 'none';
         showToast('Basemap disembunyikan (Batas Wilayah Murni)', 'info', 2000);
       }
     });

@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&family=Space+Grotesk:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <!-- Leaflet CSS (Direct cdnjs without integrity check for file:// compatibility) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
 
   <!-- Neo-Brutalism Design System Stylesheets -->
   <link rel="stylesheet" href="css/theme.css">
@@ -164,18 +164,29 @@
 
               <!-- Floating Map HUD Controls -->
               <div class="map-hud">
-                <button class="nb-btn nb-btn-icon" id="map-btn-zoom-in" title="Perbesar Peta">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                </button>
-                <button class="nb-btn nb-btn-icon" id="map-btn-zoom-out" title="Perkecil Peta">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                </button>
-                <button class="nb-btn nb-btn-icon nb-btn-blue" id="map-btn-fit" title="Pusatkan ke Batas Wilayah">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-                </button>
-                <button class="nb-btn nb-btn-icon nb-btn-secondary" id="map-btn-toggle-basemap" title="Nyalakan/Matikan Basemap">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-                </button>
+                <div style="display: flex; gap: 0.35rem; align-items: center;">
+                  <select class="nb-select" id="map-basemap-select" style="padding: 0.35rem 0.6rem; font-size: 0.75rem; font-weight: 800; background: var(--surface); box-shadow: var(--shadow-sm); cursor: pointer;">
+                    <option value="esri-topo" selected>ESRI World Topo (Gratis)</option>
+                    <option value="esri-street">ESRI Street Map (Gratis)</option>
+                    <option value="opentopo">OpenTopoMap (Gratis)</option>
+                    <option value="osm">OpenStreetMap (OSM)</option>
+                    <option value="none">Tanpa Basemap (Batas Murni)</option>
+                  </select>
+                </div>
+                <div style="display: flex; gap: 0.35rem;">
+                  <button class="nb-btn nb-btn-icon" id="map-btn-zoom-in" title="Perbesar Peta">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </button>
+                  <button class="nb-btn nb-btn-icon" id="map-btn-zoom-out" title="Perkecil Peta">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </button>
+                  <button class="nb-btn nb-btn-icon nb-btn-blue" id="map-btn-fit" title="Pusatkan ke Batas Wilayah">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                  </button>
+                  <button class="nb-btn nb-btn-icon nb-btn-secondary" id="map-btn-toggle-basemap" title="Nyalakan/Matikan Basemap">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                  </button>
+                </div>
               </div>
 
               <!-- Coordinate Badge -->
@@ -500,9 +511,9 @@
     </div>
   </footer>
 
-  <!-- External GIS Libraries (via reliable CDN) -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
+  <!-- External GIS Libraries (via reliable cdnjs without integrity check for file:// support) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/6.5.0/turf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
 

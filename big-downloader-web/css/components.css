@@ -536,6 +536,7 @@
 .map-wrapper {
   width: 100%;
   height: 480px;
+  min-height: 480px;
   background: #E8ECEF;
   border: var(--border);
   box-shadow: var(--shadow);
@@ -546,7 +547,9 @@
 
 #leaflet-map {
   width: 100%;
-  height: 100%;
+  height: 480px;
+  min-height: 480px;
+  display: block;
   z-index: 1;
 }
 
