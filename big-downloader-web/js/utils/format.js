@@ -83,3 +83,4 @@ export function generateFilename(name, level, ext) {
   const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
   return `BIG_${cleanLevel}_${cleanName}_${dateStr}.${ext}`;
 }
+

@@ -116,3 +116,4 @@ export class GeoParquetExporter {
     return new Blob([buffer.slice(0, offset)], { type: this.mimeType });
   }
 }
+

@@ -105,3 +105,4 @@ export class KmlExporter {
     return new Blob([kml], { type: this.mimeType });
   }
 }
+

@@ -62,3 +62,4 @@ export class QueryBuilder {
     return `OBJECTID = ${Number(objectId)}`;
   }
 }
+

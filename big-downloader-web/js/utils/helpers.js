@@ -86,3 +86,4 @@ export function normalizeName(text) {
     .replace(/^KAB\.\s*/i, 'KABUPATEN ')
     .replace(/^KOTA\s*/i, 'KOTA ');
 }
+

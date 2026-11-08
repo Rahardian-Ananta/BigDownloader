@@ -146,3 +146,4 @@ class HistoryStorage {
 }
 
 export const historyStorage = new HistoryStorage();
+

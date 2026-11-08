@@ -102,14 +102,23 @@ big-downloader-web/
 
 ---
 
-## 🚀 Cara Menjalankan
+## 🚀 Cara Menjalankan (100% Statis Tanpa Server!)
 
-### Cara 1: Menggunakan Local Web Server (Direkomendasikan)
+Aplikasi ini **100% statis**. Anda **TIDAK memerlukan localhost, web server, Node.js, atau Python** sama sekali.
 
-Karena aplikasi menggunakan ES Modules (`import`/`export`), jalankan local server sederhana:
+### Cara Paling Mudah (Langsung Double-Click):
+1. Buka File Explorer di Windows.
+2. Masuk ke folder `big-downloader-web`.
+3. **Cukup klik dua kali (double-click) file `index.html`** untuk langsung membukanya di browser (Chrome, Edge, Firefox).
 
+> **Mengapa bisa tanpa web server?**
+> Layanan ArcGIS REST API Badan Informasi Geospasial (BIG) secara resmi mendukung header `Access-Control-Allow-Origin: null`. Kode JavaScript telah dikemas ke dalam `js/bundle.js` sehingga browser tidak terhalang oleh pembatasan CORS modul lokal `file:///`.
+
+---
+
+### Cara Alternatif (Jika Tetap Ingin Menggunakan Local Server):
 ```bash
-# Menggunakan Node.js npx serve
+# Menggunakan Node.js
 npx serve big-downloader-web
 
 # Atau menggunakan Python 3
@@ -143,3 +152,4 @@ Hasil pengujian:
 - **100% Pemrosesan Lokal:** Konversi ke GeoJSON, Shapefile, GeoPackage, KML, Parquet, TopoJSON, CSV, dan GML dilakukan sepenuhnya di dalam browser pengguna (Client-Side).
 - **Tanpa Pengiriman Data Eksternal:** Geometri wilayah tidak pernah dikirim ke server pihak ketiga mana pun.
 - **Sanitasi XSS:** Semua string atribut disanitasi sebelum ditampilkan pada DOM atau popup peta.
+

@@ -30,3 +30,4 @@ self.onmessage = async (e) => {
     }
   }
 };
+

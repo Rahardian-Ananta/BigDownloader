@@ -73,3 +73,4 @@ export function closeModal(modalId) {
     document.body.style.overflow = '';
   }
 }
+

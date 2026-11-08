@@ -8,3 +8,4 @@ document.addEventListener('DOMContentLoaded', () => {
   window.app = new App();
   console.log('BIG Downloader Web initialized successfully with Neo-Brutalism System.');
 });
+

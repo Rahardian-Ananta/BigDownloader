@@ -45,3 +45,4 @@ export class GeoJsonExporter {
     return new Blob([jsonString], { type: this.mimeType });
   }
 }
+
