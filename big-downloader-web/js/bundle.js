@@ -2282,6 +2282,7 @@ const downloadService = new DownloadService();
 
 class App {
   constructor() {
+    this.geometryCache = new Map(); // Client-side cache for instant re-selection
     this.state = {
       selectedLevel: 'Kota',
       searchQuery: '',
@@ -2801,16 +2802,13 @@ class App {
 
       // Card click events
       $$('.result-card', container).forEach(card => {
-        card.addEventListener('click', (e) => {
+        card.addEventListener('click', () => {
           const idx = Number(card.dataset.index);
           this.selectRegion(this.state.results[idx]);
         });
       });
 
-      // Auto-select first result if nothing selected
-      if (!this.state.selectedRegion && result.items.length > 0) {
-        this.selectRegion(result.items[0]);
-      }
+      // CATATAN: Tidak melakukan auto-select hasil pertama agar pengguna memilih secara manual
     } catch (err) {
       container.innerHTML = `
         <div style="text-align: center; padding: 2rem; color: #EF4444; font-weight: 700;">
@@ -2820,10 +2818,42 @@ class App {
     }
   }
 
+  /**
+   * Kunci atau buka interaksi peta dan tampilkan loading overlay
+   */
+  setMapLocked(locked, regionName = '', adminLevel = '') {
+    const overlay = $('#map-loading-overlay');
+    const title = $('#map-loading-title');
+    const sub = $('#map-loading-sub');
+
+    if (locked) {
+      if (this.state.map) {
+        this.state.map.dragging?.disable();
+        this.state.map.touchZoom?.disable();
+        this.state.map.doubleClickZoom?.disable();
+        this.state.map.scrollWheelZoom?.disable();
+        this.state.map.boxZoom?.disable();
+        this.state.map.keyboard?.disable();
+      }
+      if (title) title.textContent = `MEMUAT: ${regionName.toUpperCase()}`;
+      if (sub) sub.textContent = `Mengambil geometri ${adminLevel} dari BIG...`;
+      overlay?.classList.add('active');
+    } else {
+      if (this.state.map) {
+        this.state.map.dragging?.enable();
+        this.state.map.touchZoom?.enable();
+        this.state.map.doubleClickZoom?.enable();
+        this.state.map.scrollWheelZoom?.enable();
+        this.state.map.boxZoom?.enable();
+        this.state.map.keyboard?.enable();
+      }
+      overlay?.classList.remove('active');
+    }
+  }
+
   async selectRegion(regionItem) {
     if (!regionItem) return;
     this.state.selectedRegion = regionItem;
-    this.state.cachedGeoJson = null; // reset cached geometry
 
     // Update active highlight on cards
     $$('.result-card').forEach(card => {
@@ -2838,39 +2868,57 @@ class App {
     $('#detail-province').textContent = regionItem.province;
     $('#detail-regency').textContent = regionItem.regency;
     $('#detail-code').textContent = regionItem.code;
+
+    // 1. Cek Cache: Jika sudah pernah dimuat, langsung gunakan cache (instan tanpa loading)
+    if (this.geometryCache.has(regionItem.id)) {
+      const cachedGeoJson = this.geometryCache.get(regionItem.id);
+      this.state.cachedGeoJson = cachedGeoJson;
+      this.applyRegionGeometry(cachedGeoJson, regionItem);
+      showToast(`Batas wilayah ${regionItem.name} dimuat instan dari cache.`, 'info', 1800);
+      this.updateExportSummary();
+      return;
+    }
+
+    // 2. Jika belum ada di cache, kunci peta dan tampilkan loading overlay
     $('#detail-feature-count').textContent = 'Memuat...';
     $('#detail-geom-type').textContent = 'Memuat...';
     $('#detail-data-size').textContent = 'Memuat...';
-
-    // Show loading on Map
-    showToast(`Mengambil geometri batas ${regionItem.name} dari BIG...`, 'info', 2500);
+    this.setMapLocked(true, regionItem.name, regionItem.adminLevel);
 
     try {
       const geojson = await geometryService.fetchRegionGeometry(regionItem);
+      
+      // Simpan ke cache lokal memori
+      this.geometryCache.set(regionItem.id, geojson);
       this.state.cachedGeoJson = geojson;
 
-      const numFeatures = geojson.features ? geojson.features.length : 1;
-      const geomType = geojson.features?.[0]?.geometry?.type || 'Polygon';
-      const sizeBytes = JSON.stringify(geojson).length;
-
-      $('#detail-feature-count').textContent = `${numFeatures} Fitur`;
-      $('#detail-geom-type').textContent = geomType;
-      $('#detail-data-size').textContent = formatBytes(sizeBytes);
-
-      // Render on Leaflet Map
-      this.renderGeoJsonOnMap(geojson, regionItem.name);
-
-      // Update attributes table in modal
-      this.renderAttributeTable(geojson);
+      this.applyRegionGeometry(geojson, regionItem);
     } catch (err) {
       console.error('Error fetching geometry:', err);
       showToast(`Gagal memuat geometri: ${err.message}`, 'error', 5000);
       $('#detail-feature-count').textContent = 'Gagal';
       $('#detail-geom-type').textContent = '-';
       $('#detail-data-size').textContent = '-';
+    } finally {
+      this.setMapLocked(false);
+      this.updateExportSummary();
     }
+  }
 
-    this.updateExportSummary();
+  applyRegionGeometry(geojson, regionItem) {
+    const numFeatures = geojson.features ? geojson.features.length : 1;
+    const geomType = geojson.features?.[0]?.geometry?.type || 'Polygon';
+    const sizeBytes = JSON.stringify(geojson).length;
+
+    $('#detail-feature-count').textContent = `${numFeatures} Fitur`;
+    $('#detail-geom-type').textContent = geomType;
+    $('#detail-data-size').textContent = formatBytes(sizeBytes);
+
+    // Render on Leaflet Map
+    this.renderGeoJsonOnMap(geojson, regionItem.name);
+
+    // Update attributes table in modal
+    this.renderAttributeTable(geojson);
   }
 
   renderAttributeTable(geojson) {

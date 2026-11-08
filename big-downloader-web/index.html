@@ -168,6 +168,15 @@
             <div class="map-wrapper">
               <div id="leaflet-map"></div>
 
+              <!-- Map Loading Overlay & Interaction Lock -->
+              <div class="map-loading-overlay" id="map-loading-overlay">
+                <div class="map-loading-box">
+                  <div class="map-loading-spinner"></div>
+                  <div class="map-loading-title" id="map-loading-title">MEMUAT BATAS WILAYAH...</div>
+                  <div class="map-loading-sub" id="map-loading-sub">Mengambil data geometri resmi dari BIG</div>
+                </div>
+              </div>
+
               <!-- Floating Map HUD Controls -->
               <div class="map-hud">
                 <div style="display: flex; gap: 0.35rem; align-items: center;">
