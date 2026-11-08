@@ -1,16 +1,8 @@
-/target/
-**/*.rs.bk
-*.jsonl
-/dist/
-/downloads/
-/big_downloader_data/
-*.db
-*.log
-mapserver.json
-mapserver_utf8.json
-layer0.json
-layer0_utf8.json
-layer1.json
-layer1_utf8.json
-majene.geojson
-
+# BIG Downloader Web — Git Ignore
+dist/
+target/
+node_modules/
+DESIGN_MOCKUP_ASCII.md
+design_sample.html
+.DS_Store
+Thumbs.db
